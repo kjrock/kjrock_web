@@ -15,14 +15,11 @@ const video = document.querySelector('video');
 
 let pc1;
 let pc2;
-const offerOptions = {
-  offerToReceiveAudio: 1,
-  offerToReceiveVideo: 1
-};
 
 let startTime;
 
 video.addEventListener('loadedmetadata', function() {
+  document.getElementById('autoplay').style.display = 'none';
   console.log(`Remote video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
 });
 
@@ -78,7 +75,7 @@ function call() {
   console.log('Added local stream to pc1');
 
   console.log('pc1 createOffer start');
-  pc1.createOffer(onCreateOfferSuccess, onCreateSessionDescriptionError, offerOptions);
+  pc1.createOffer(onCreateOfferSuccess, onCreateSessionDescriptionError);
 }
 
 function onCreateSessionDescriptionError(error) {
@@ -114,6 +111,9 @@ function gotRemoteStream(e) {
   if (video.srcObject !== e.streams[0]) {
     video.srcObject = e.streams[0];
     console.log('pc2 received remote stream');
+    if (video.paused) {
+      document.getElementById('autoplay').style.display = 'block';
+    }
   }
 }
 

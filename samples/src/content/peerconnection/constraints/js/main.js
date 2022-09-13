@@ -38,6 +38,8 @@ const remoteVideo = document.querySelector('div#remoteVideo video');
 const localVideoStatsDiv = document.querySelector('div#localVideo div');
 const remoteVideoStatsDiv = document.querySelector('div#remoteVideo div');
 
+const updateStats = document.querySelector('input#updateStats');
+
 let localPeerConnection;
 let remotePeerConnection;
 let localStream;
@@ -89,7 +91,7 @@ function getMedia() {
   navigator.mediaDevices.getUserMedia(getUserMediaConstraints())
       .then(gotStream)
       .catch(e => {
-        const message = `getUserMedia error: ${e.name}\nPermissionDeniedError may mean invalid constraints.`;
+        const message = `getUserMedia error: ${e.name}\nThis may mean invalid constraints.`;
         alert(message);
         console.log(message);
         getMediaButton.disabled = false;
@@ -151,8 +153,8 @@ function createPeerConnection() {
   remotePeerConnection = new RTCPeerConnection(null);
   localStream.getTracks().forEach(track => localPeerConnection.addTrack(track, localStream));
   console.log('localPeerConnection creating offer');
-  localPeerConnection.onnegotiationeeded = () => console.log('Negotiation needed - localPeerConnection');
-  remotePeerConnection.onnegotiationeeded = () => console.log('Negotiation needed - remotePeerConnection');
+  localPeerConnection.onnegotiationneeded = () => console.log('Negotiation needed - localPeerConnection');
+  remotePeerConnection.onnegotiationneeded = () => console.log('Negotiation needed - remotePeerConnection');
   localPeerConnection.onicecandidate = e => {
     console.log('Candidate localPeerConnection');
     remotePeerConnection
@@ -260,6 +262,9 @@ function showLocalStats(results) {
 
 // Display statistics
 setInterval(() => {
+  if (!updateStats.checked) {
+    return;
+  }
   if (localPeerConnection && remotePeerConnection) {
     remotePeerConnection
         .getStats(null)
@@ -295,7 +300,11 @@ function dumpStats(results) {
     statsString += `time ${res.timestamp}<br>`;
     Object.keys(res).forEach(k => {
       if (k !== 'timestamp' && k !== 'type' && k !== 'id') {
-        statsString += `${k}: ${res[k]}<br>`;
+        if (typeof res[k] === 'object') {
+          statsString += `${k}: ${JSON.stringify(res[k])}<br>`;
+        } else {
+          statsString += `${k}: ${res[k]}<br>`;
+        }
       }
     });
   });

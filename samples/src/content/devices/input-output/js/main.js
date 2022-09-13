@@ -108,11 +108,3 @@ audioOutputSelect.onchange = changeAudioDestination;
 videoSelect.onchange = start;
 
 start();
-
-function updateDeviceList() {
-  navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
-}
-
-navigator.mediaDevices.ondevicechange = event => {
-  updateDeviceList();
-}

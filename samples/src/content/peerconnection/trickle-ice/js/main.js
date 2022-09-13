@@ -18,6 +18,7 @@ const servers = document.querySelector('select#servers');
 const urlInput = document.querySelector('input#url');
 const usernameInput = document.querySelector('input#username');
 const iceCandidatePoolInput = document.querySelector('input#iceCandidatePool');
+const getUserMediaInput = document.querySelector('input#getUserMedia');
 
 addButton.onclick = addServer;
 gatherButton.onclick = start;
@@ -29,22 +30,24 @@ resetButton.onclick = (e) => {
   setDefaultServer(serversSelect);
 };
 
-iceCandidatePoolInput.onchange = function(e) {
+iceCandidatePoolInput.onchange = (e) => {
   const span = e.target.parentElement.querySelector('span');
   span.textContent = e.target.value;
 };
 
 let begin;
 let pc;
+let stream;
 let candidates;
 
 const allServersKey = 'servers';
 
 function setDefaultServer(serversSelect) {
-  const o = document.createElement('option');
-  o.value = '{"urls":["stun:stun.l.google.com:19302"]}';
-  o.text = 'stun:stun.l.google.com:19302';
-  serversSelect.add(o);
+  const option = document.createElement('option');
+  option.value = '{"urls":["stun:stun.l.google.com:19302"]}';
+  option.text = 'stun:stun.l.google.com:19302';
+  option.ondblclick = selectServer;
+  serversSelect.add(option);
 }
 
 function writeServersToLocalStorage() {
@@ -81,7 +84,7 @@ function selectServer(event) {
 
 function addServer() {
   const scheme = urlInput.value.split(':')[0];
-  if (scheme !== 'stun' && scheme !== 'turn' && scheme !== 'turns') {
+  if (!['stun', 'stuns', 'turn', 'turns'].includes(scheme)) {
     alert(`URI scheme ${scheme} is not valid`);
     return;
   }
@@ -115,13 +118,17 @@ function removeServer() {
   writeServersToLocalStorage();
 }
 
-function start() {
+async function start() {
   // Clean out the table.
   while (candidateTBody.firstChild) {
     candidateTBody.removeChild(candidateTBody.firstChild);
   }
 
   gatherButton.disabled = true;
+  if (getUserMediaInput.checked) {
+    stream = await navigator.mediaDevices.getUserMedia({audio: true, video: true});
+  }
+  getUserMediaInput.disabled = true;
 
   // Read the values from the input boxes.
   const iceServers = [];
@@ -149,27 +156,26 @@ function start() {
   // Whether we only gather a single set of candidates for RTP and RTCP.
 
   console.log(`Creating new PeerConnection with config=${JSON.stringify(config)}`);
-  document.getElementById('error').innerText = '';
-  pc = new RTCPeerConnection(config);
-  pc.onicecandidate = iceCallback;
-  pc.onicegatheringstatechange = gatheringStateChange;
-  pc.onicecandidateerror = iceCandidateError;
-  pc.createOffer(
-      offerOptions
-  ).then(
-      gotDescription,
-      noDescription
-  );
-}
-
-function gotDescription(desc) {
+  const errDiv = document.getElementById('error');
+  errDiv.innerText = '';
+  let desc;
+  try {
+    pc = new RTCPeerConnection(config);
+    pc.onicecandidate = iceCallback;
+    pc.onicegatheringstatechange = gatheringStateChange;
+    pc.onicecandidateerror = iceCandidateError;
+    if (stream) {
+      stream.getTracks().forEach(track => pc.addTrack(track, stream));
+    }
+    desc = await pc.createOffer(offerOptions);
+  } catch (err) {
+    errDiv.innerText = `Error creating offer: ${err}`;
+    gatherButton.disabled = false;
+    return;
+  }
   begin = window.performance.now();
   candidates = [];
   pc.setLocalDescription(desc);
-}
-
-function noDescription(error) {
-  console.log('Error creating offer: ', error);
 }
 
 // Parse the uint32 PRIORITY field into its constituent parts from RFC 5245,
@@ -248,13 +254,10 @@ function iceCallback(event) {
     appendCell(row, candidate.address);
     appendCell(row, candidate.port);
     appendCell(row, formatPriority(candidate.priority));
+    appendCell(row, candidate.sdpMid);
+    appendCell(row, candidate.sdpMLineIndex);
+    appendCell(row, candidate.usernameFragment);
     candidates.push(candidate);
-  } else if (!('onicegatheringstatechange' in RTCPeerConnection.prototype)) {
-    // should not be done if its done in the icegatheringstatechange callback.
-    appendCell(row, getFinalResult(), 7);
-    pc.close();
-    pc = null;
-    gatherButton.disabled = false;
   }
   candidateTBody.appendChild(row);
 }
@@ -269,7 +272,12 @@ function gatheringStateChange() {
   appendCell(row, getFinalResult(), 7);
   pc.close();
   pc = null;
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+  }
   gatherButton.disabled = false;
+  getUserMediaInput.disabled = false;
   candidateTBody.appendChild(row);
 }
 

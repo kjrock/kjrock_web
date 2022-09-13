@@ -30,7 +30,7 @@ remoteVideo.addEventListener('loadedmetadata', function() {
 });
 
 remoteVideo.addEventListener('resize', () => {
-  console.log(`Remote video size changed to ${remoteVideo.videoWidth}x${remoteVideo.videoHeight}`);
+  console.log(`Remote video size changed to ${remoteVideo.videoWidth}x${remoteVideo.videoHeight} - Time since pageload ${performance.now().toFixed(0)}ms`);
   // We'll use the first onsize callback as an indication that video has started
   // playing out.
   if (startTime) {
@@ -70,12 +70,6 @@ async function start() {
   }
 }
 
-function getSelectedSdpSemantics() {
-  const sdpSemanticsSelect = document.querySelector('#sdpSemantics');
-  const option = sdpSemanticsSelect.options[sdpSemanticsSelect.selectedIndex];
-  return option.value === '' ? {} : {sdpSemantics: option.value};
-}
-
 async function call() {
   callButton.disabled = true;
   hangupButton.disabled = false;
@@ -89,7 +83,7 @@ async function call() {
   if (audioTracks.length > 0) {
     console.log(`Using audio device: ${audioTracks[0].label}`);
   }
-  const configuration = getSelectedSdpSemantics();
+  const configuration = {};
   console.log('RTCPeerConnection configuration:', configuration);
   pc1 = new RTCPeerConnection(configuration);
   console.log('Created local peer connection object pc1');

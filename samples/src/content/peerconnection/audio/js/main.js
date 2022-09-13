@@ -23,6 +23,7 @@ let localStream;
 
 let bitrateGraph;
 let bitrateSeries;
+let targetBitrateSeries;
 let headerrateSeries;
 
 let packetGraph;
@@ -35,6 +36,10 @@ const offerOptions = {
   offerToReceiveVideo: 0,
   voiceActivityDetection: false
 };
+
+const audioLevels = [];
+let audioLevelGraph;
+let audioLevelSeries;
 
 // Enabling opus DTX is an expert option without GUI.
 // eslint-disable-next-line prefer-const
@@ -102,7 +107,7 @@ function gotStream(stream) {
       console.log(JSON.stringify(codecs, null, ' '));
       const selectedCodecIndex = codecs.findIndex(c => c.mimeType === mimeType && c.clockRate === parseInt(clockRate, 10) && c.sdpFmtpLine === sdpFmtpLine);
       const selectedCodec = codecs[selectedCodecIndex];
-      codecs.slice(selectedCodecIndex, 1);
+      codecs.splice(selectedCodecIndex, 1);
       codecs.unshift(selectedCodec);
       const transceiver = pc1.getTransceivers().find(t => t.sender && t.sender.track === localStream.getAudioTracks()[0]);
       transceiver.setCodecPreferences(codecs);
@@ -117,12 +122,19 @@ function gotStream(stream) {
   bitrateGraph = new TimelineGraphView('bitrateGraph', 'bitrateCanvas');
   bitrateGraph.updateEndDate();
 
+  targetBitrateSeries = new TimelineDataSeries();
+  targetBitrateSeries.setColor('blue');
+
   headerrateSeries = new TimelineDataSeries();
   headerrateSeries.setColor('green');
 
   packetSeries = new TimelineDataSeries();
   packetGraph = new TimelineGraphView('packetGraph', 'packetCanvas');
   packetGraph.updateEndDate();
+
+  audioLevelSeries = new TimelineDataSeries();
+  audioLevelGraph = new TimelineGraphView('audioLevelGraph', 'audioLevelCanvas');
+  audioLevelGraph.updateEndDate();
 }
 
 function onCreateSessionDescriptionError(error) {
@@ -320,6 +332,9 @@ window.setInterval(() => {
     return;
   }
   const sender = pc1.getSenders()[0];
+  if (!sender) {
+    return;
+  }
   sender.getStats().then(res => {
     res.forEach(report => {
       let bytes;
@@ -335,7 +350,7 @@ window.setInterval(() => {
 
         packets = report.packetsSent;
         if (lastResult && lastResult.has(report.id)) {
-          const deltaT = now - lastResult.get(report.id).timestamp;
+          const deltaT = (now - lastResult.get(report.id).timestamp) / 1000;
           // calculate bitrate
           const bitrate = 8 * (bytes - lastResult.get(report.id).bytesSent) /
             deltaT;
@@ -345,11 +360,12 @@ window.setInterval(() => {
           // append to chart
           bitrateSeries.addPoint(now, bitrate);
           headerrateSeries.addPoint(now, headerrate);
-          bitrateGraph.setDataSeries([bitrateSeries, headerrateSeries]);
+          targetBitrateSeries.addPoint(now, report.targetBitrate);
+          bitrateGraph.setDataSeries([bitrateSeries, headerrateSeries, targetBitrateSeries]);
           bitrateGraph.updateEndDate();
 
           // calculate number of packets and append to chart
-          packetSeries.addPoint(now, 1000 * (packets -
+          packetSeries.addPoint(now, (packets -
             lastResult.get(report.id).packetsSent) / deltaT);
           packetGraph.setDataSeries([packetSeries]);
           packetGraph.updateEndDate();
@@ -359,3 +375,33 @@ window.setInterval(() => {
     lastResult = res;
   });
 }, 1000);
+
+if (window.RTCRtpReceiver && ('getSynchronizationSources' in window.RTCRtpReceiver.prototype)) {
+  let lastTime;
+  const getAudioLevel = (timestamp) => {
+    window.requestAnimationFrame(getAudioLevel);
+    if (!pc2) {
+      return;
+    }
+    const receiver = pc2.getReceivers().find(r => r.track.kind === 'audio');
+    if (!receiver) {
+      return;
+    }
+    const sources = receiver.getSynchronizationSources();
+    sources.forEach(source => {
+      audioLevels.push(source.audioLevel);
+    });
+    if (!lastTime) {
+      lastTime = timestamp;
+    } else if (timestamp - lastTime > 500 && audioLevels.length > 0) {
+      // Update graph every 500ms.
+      const maxAudioLevel = Math.max.apply(null, audioLevels);
+      audioLevelSeries.addPoint(Date.now(), maxAudioLevel);
+      audioLevelGraph.setDataSeries([audioLevelSeries]);
+      audioLevelGraph.updateEndDate();
+      audioLevels.length = 0;
+      lastTime = timestamp;
+    }
+  };
+  window.requestAnimationFrame(getAudioLevel);
+}
