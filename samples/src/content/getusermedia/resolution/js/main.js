@@ -63,9 +63,7 @@ const qvgaConstraints = {
   video: {width: {exact: 320}, height: {exact: 240}}
 };
 
-const vgaConstraints = {
-  video: {width: {exact: 640}, height: {exact: 480}, hwPreview: false}
-};
+const vgaConstraints = {};
 
 const hdConstraints = {
   video: {width: {exact: 1280}, height: {exact: 720}, hwPreview: true, faceDetection: true}
