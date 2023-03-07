@@ -90,14 +90,14 @@ const eightKConstraints = {
 function gotStream(mediaStream) {
   stream = window.stream = mediaStream; // stream available to console
   stream.addEventListener("inactive", () => {
-    console.log("stream->inactive..")
+    console.error("stream->inactive..")
   });
   video.srcObject = mediaStream;
   messagebox.style.display = 'none';
   videoblock.style.display = 'block';
   const track = mediaStream.getVideoTracks()[0];
   track.addEventListener("ended", () => {
-    console.log("track->ended..")
+    console.error("track->ended..")
   });
 
   const constraints = track.getConstraints();
@@ -186,7 +186,7 @@ sizeLock.onchange = () => {
 function getMedia(constraints) {
   if (stream) {
     stream.getTracks().forEach(track => {
-      console.log("call track->stop()");
+      console.error("call track->stop()");
       track.stop();
     });
   }
