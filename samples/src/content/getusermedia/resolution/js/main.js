@@ -64,15 +64,15 @@ const qvgaConstraints = {
 };
 
 const vgaConstraints = {
-  video: {width: {exact: 640}, height: {exact: 480}}
+  video: {width: {exact: 640}, height: {exact: 480}, hwPreview: false}
 };
 
 const hdConstraints = {
-  video: {width: {exact: 1280}, height: {exact: 720}}
+  video: {width: {exact: 1280}, height: {exact: 720}, hwPreview: true, faceDetection: true}
 };
 
 const fullHdConstraints = {
-  video: {width: {exact: 1920}, height: {exact: 1080}}
+  video: {width: {exact: 1920}, height: {exact: 1080}, hwPreview: true, faceDetection: true}
 };
 
 const televisionFourKConstraints = {
