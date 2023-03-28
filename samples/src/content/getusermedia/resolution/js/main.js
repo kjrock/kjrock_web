@@ -64,15 +64,16 @@ const qvgaConstraints = {
 };
 
 const vgaConstraints = {
-  video: {width: {exact: 640}, height: {exact: 480}, hwPreview: false}
+  // video: {width: {exact: 640}, height: {exact: 480}, hwPreview: false}
+  video: {width: {exact: 640}, height: {exact: 480}, screenCaptureMethod: "vtcap_scaler_output"}
 };
 
 const hdConstraints = {
-  video: {width: {exact: 1280}, height: {exact: 720}, hwPreview: true, faceDetection: true}
+  video: {width: {exact: 1280}, height: {exact: 720}, screenCaptureMethod: "vtcap_blended_output"}
 };
 
 const fullHdConstraints = {
-  video: {width: {exact: 1920}, height: {exact: 1080}, hwPreview: true, faceDetection: true}
+  video: {width: {exact: 1920}, height: {exact: 1080}, screenCaptureMethod: "cap_ser_screen"}
 };
 
 const televisionFourKConstraints = {
