@@ -92,14 +92,15 @@
 
     <div id="videoblock">
         <p id="dimensions"></p>
-
-        <video id="gum-res-local" playsinline autoplay></video>
         <div id="width">
             <label>Width <span></span>px:</label>
-            <input type="range" min="0" max="7680" value="0">
+            <!-- <input type="range" min="0" max="7680" value="0"> -->
+            <input type="number" min="0" max="7680" value="0">
         </div>
         <input id="sizelock" type="checkbox">Lock video size<br>
         <input id="aspectlock" type="checkbox">Lock aspect ratio<br>
+
+        <video id="gum-res-local" playsinline autoplay></video>
     </div>
     <p id="errormessage"></p>
 
