@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for post in posts %}
+<article onclick="window.location.href='{{post.permalink}}';">
+  <h1><a href="{{post.permalink}}">{{post.title}}</a></h1>
+  <p>
+    {{post.yaml.description}}
+  </p>
+</article>
+{% endfor %}
+{% endblock %}
