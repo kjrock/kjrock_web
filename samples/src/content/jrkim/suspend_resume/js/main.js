@@ -70,3 +70,4 @@ document.addEventListener('visibilitychange', function () {
 });
 
 
+init();
