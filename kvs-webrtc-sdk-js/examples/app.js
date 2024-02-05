@@ -2,6 +2,13 @@ let ROLE = null; // Possible values: 'master', 'viewer', null
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'];
 let LOG_LEVEL = 'info'; // Possible values: any value of LOG_LEVELS
 
+$('#region').val("ap-northeast-2");
+$('#channelName').val("Z9Ub77LPRqeZoc362r1LAw");
+$('#accessKeyId').val("ASIAUCH4HQ4MU3J26SZK");
+$('#secretAccessKey').val("rY6vgAoKdYToN9kqsHDGxN2v9Umo4/RQ3hVeNn2I");
+$('#sessionToken').val("IQoJb3JpZ2luX2VjENL//////////wEaDmFwLW5vcnRoZWFzdC0yIkYwRAIgTVRNkrDd/fla3A5jbS1F9iooNkBVlrnYKyvmPQGEipQCIGDoDY3wswchO7Eq0irlt6f9ACkXLpL8r077QvP5Nq//KrkECJv//////////wEQBRoMMjc5NzAxODQ5ODgxIgx1qwvlrp/qWBU8WxYqjQR9prJeNWd1TcWcQUmFkqnKj5sB8LEpPKcSvy+MVkfduvHmg4woeASB7SWnJLNkVG9rvjyq0FE0FL96YhsNC7r58rEG4i0K+xCkgl1bwXbfuBD452sUAIjOEpoiWB30kejalqkKG77yduuJjj1FSLd8TWS0aQkFvHcbOJdOCmQxUbPyulavBXIdQlqfEV7dRzEObygNvluq09eBi/wWWKfVvBx6acamje6szL6IGxWwJEeXonUQJcwdmgCywu6sa68CX06znmKy+VgVY7bHudEBW2qjD4zZJ0XZrRuThUKcFC03xfGiKjQKFfe7EJmVPBbJRBxB5//vjzIsMYOpS4EmBDXeZ6XckXAWaXJfE3ahyN3Swsb7eDyiLvM6CHBdCQ/b9Dxa+a5My4s4DOh6Lln2KyYQpy6C/rfBO+SOnRE0OSz2VzfDSn5dk1yrn9JH//QBv4lVP14A1CjQgFzXzB5tvMCsCwvH0kfxpnykLoqF7WTlCNLRQ7jfpCBQAXXOF0h7SZdHAOGU8vatkdyAdf/sMnxikZMf6VVS0u/hrtHn/wsWbeZevkmwCObotWjBQYD4Un29hJjPO4qn7yxoHM1sdsGJRmfIqnn/NGkUSa69JaBzt0iGIzY4Yn0rYp0+chOW5ZPR4j2ka76WcIIysCqiw0TxsuOW64aKYKbkjzAnfVwpv4BIcfSHBqKm0pwwtoyBrgY6hgLxzZWE+g3AwaXm9TQpsHNhkAWqeh4kt+JMbCpKetUNldBWczYkNTPeh7ZbJorZhEmwhyqa73snMaivnQBt7VJ3Ohrs5X8jHMipR/w52yQOxyzFa8BtFuV1ZiO+0d7cQk3H9qTcDUff5e5aNjzKDExH7cpCiB7UR/WrUcMfWP7k1+bZfpu0RQNQ8J/gd5+soqzF2yoFBgm9SRZZNGXXb5dD6unKvFLNsUpgPuaV/lbypaM4fKD6KgnONU0jwK1owuw8XOfGSF7mBGneuxrH81pa7lT/Z7Sh/eivwUbkqWdKtq8oSe565v1zCIWX7xT0nsfmIWfUhsg6htZl2oHJ81i+2iECwbUT");
+
+
 function configureLogging() {
     function log(level, messages) {
         const text = messages
