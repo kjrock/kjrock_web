@@ -25,15 +25,10 @@ video.onresize = () => {
   console.log("video.onresize");
 };
 
-function errorMessage() {
-  const message = who + ': ' + what;
-  messagebox.innerText = message;
-  messagebox.style.display = 'block';
-  console.log(message);
-}
-
 let onExtInputError = ({detail}) => {
   console.log('##### onExtInputError');
+  messagebox.innerText = detail;
+  messagebox.style.display = 'block';
   console.log(detail);
 }
 
