@@ -13,6 +13,9 @@
 
   <!-- <link rel="stylesheet" href="../css/main.css"> -->
   <style>
+    body {
+      background-color: white;
+    }
     video {
       background: black;
       width: 30%;
@@ -29,11 +32,22 @@
       <h2>PeerConnection</h2>
       <label>
         Number of peer connections
-        <input id="num-peerconnections" value="10">
+        <input id="num-peerconnections" value="1">
       </label><br>
       <label>
         Enable googCpuOveruseDetection
         <input type="checkbox" id="cpuoveruse-detection" checked>
+      </label><br>
+      <div class="box">
+        <span>Codec preferences:</span>
+        <select id="codecPreferences">
+            <option selected value="">Default</option>
+        </select>
+        <div id="actualCodec"></div>
+      </div>
+      <label>
+        prefered codec
+        <input id="prefered-codec" value="">
       </label><br>
       <button class="green" id="start-test">
         Start Test

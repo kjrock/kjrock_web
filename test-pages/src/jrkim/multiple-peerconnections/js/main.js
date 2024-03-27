@@ -17,12 +17,20 @@ var videoArea = $('video-area');
 var nPeerConnectionsInput = $('num-peerconnections');
 var videoWidth = $('video-width');
 var startTestButton = $('start-test');
+
 var cpuOveruseDetectionCheckbox = $('cpuoveruse-detection');
+const codecPreferences = document.getElementById('codecPreferences');
+const supportsSetCodecPreferences = window.RTCRtpTransceiver &&
+  'setCodecPreferences' in window.RTCRtpTransceiver.prototype;
+const preferredCodec = document.getElementById('prefered-codec');
+codecPreferences.addEventListener('change', () => {
+  preferredCodec.value = codecPreferences.options[codecPreferences.selectedIndex].value;
+});
 
 startTestButton.onclick = startTest;
 
 function logError(err) {
-  console.err(err);
+  console.log(err);
 }
 
 function addNewVideoElement() {
@@ -86,6 +94,32 @@ function PeerConnection(id, cpuOveruseDetection) {
       this.remoteView.srcObject = e.stream;
     };
 
+    if (supportsSetCodecPreferences) {
+      const {codecs} = RTCRtpSender.getCapabilities('video');
+      codecs.forEach(codec => {
+        if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
+          return;
+        }
+        const option = document.createElement('option');
+        option.value = (codec.mimeType + ' ' + (codec.sdpFmtpLine || '')).trim();
+        option.innerText = option.value;
+        codecPreferences.appendChild(option);
+        console.log(option.value);
+      });
+      if (preferredCodec.value !== '') {
+        const [mimeType, sdpFmtpLine] = preferredCodec.value.split(' ');
+        const {codecs} = RTCRtpSender.getCapabilities('video');
+        const selectedCodecIndex = codecs.findIndex(c => c.mimeType === mimeType && c.sdpFmtpLine === sdpFmtpLine);
+        const selectedCodec = codecs[selectedCodecIndex];
+        codecs.splice(selectedCodecIndex, 1);
+        codecs.unshift(selectedCodec);
+        console.log(codecs);
+        const transceiver = this.localConnection.getTransceivers().find(t => t.sender && t.sender.track === stream.getVideoTracks()[0]);
+        transceiver.setCodecPreferences(codecs);
+        console.log('Preferred video codec', selectedCodec);
+      }
+    }
+
     // Initiate call.
     var onCreateOfferSuccess = this.onCreateOfferSuccess.bind(this);
     this.localConnection.createOffer({
@@ -123,3 +157,4 @@ function startTest() {
     new PeerConnection(i, cpuOveruseDetection).start();
   }
 }
+
