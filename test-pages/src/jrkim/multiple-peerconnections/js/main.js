@@ -49,7 +49,9 @@ function addNewVideoElement() {
   // newCell.appendChild(video);
 
   var video = document.createElement('video');
-  var w =  (100/nPeerConnectionsInput.value) + "%";
+  let pc_num =
+   nPeerConnectionsInput.options[nPeerConnectionsInput.selectedIndex].value;
+  var w =  (100/pc_num) + "%";
   console.log("w : " + w);
   video.style.width = w;
   video.autoplay = true;
@@ -162,8 +164,9 @@ function startTest() {
   startTestButton.disabled = true;
   hangupButton.disabled = false;
   var cpuOveruseDetection = cpuOveruseDetectionCheckbox.checked;
-  var nPeerConnections = nPeerConnectionsInput.value;
-  for (var i = 0; i < nPeerConnections; ++i) {
+  let pc_num =
+    nPeerConnectionsInput.options[nPeerConnectionsInput.selectedIndex].value;
+  for (var i = 0; i < pc_num; ++i) {
     let new_pc = new PeerConnection(i, cpuOveruseDetection);
     new_pc.start();
     PCs.push(new_pc);
