@@ -17,6 +17,14 @@ var videoArea = $('video-area');
 var nPeerConnectionsInput = $('num-peerconnections');
 var videoWidth = $('video-width');
 var startTestButton = $('start-test');
+const hangupButton = document.getElementById('hangupButton');
+
+startTestButton.disabled = false;
+hangupButton.disabled = true;
+
+startTestButton.onclick = startTest;
+hangupButton.addEventListener('click', hangup);
+
 
 var cpuOveruseDetectionCheckbox = $('cpuoveruse-detection');
 const codecPreferences = document.getElementById('codecPreferences');
@@ -27,7 +35,7 @@ codecPreferences.addEventListener('change', () => {
   preferredCodec.value = codecPreferences.options[codecPreferences.selectedIndex].value;
 });
 
-startTestButton.onclick = startTest;
+var PCs = [];
 
 function logError(err) {
   console.log(err);
@@ -151,10 +159,32 @@ function PeerConnection(id, cpuOveruseDetection) {
 }
 
 function startTest() {
+  startTestButton.disabled = true;
+  hangupButton.disabled = false;
   var cpuOveruseDetection = cpuOveruseDetectionCheckbox.checked;
   var nPeerConnections = nPeerConnectionsInput.value;
   for (var i = 0; i < nPeerConnections; ++i) {
-    new PeerConnection(i, cpuOveruseDetection).start();
+    let new_pc = new PeerConnection(i, cpuOveruseDetection);
+    new_pc.start();
+    PCs.push(new_pc);
   }
 }
 
+function hangup() {
+  console.log('Ending call');
+  PCs.forEach(function(pc){
+    pc.localConnection.close();
+    pc.remoteConnection.close();
+    pc.remoteConnection = null;
+    pc.localConnection = null;
+    pc.remoteView = null;
+  });
+
+  while(PCs.pop()){}
+
+  codecPreferences.innerHTML = ""
+  videoArea.innerHTML = "";
+  startTestButton.disabled = false;
+  hangupButton.disabled = true;
+  codecPreferences.disabled = false;
+}
