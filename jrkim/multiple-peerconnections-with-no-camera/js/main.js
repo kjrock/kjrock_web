@@ -56,6 +56,7 @@ function maybeCreateStream() {
   } else {
     console.log('captureStream() not supported');
   }
+  window.stream = mediaStream; // stream available to console
 }
 
 // Video tag capture must be set up after video tracks are enumerated.

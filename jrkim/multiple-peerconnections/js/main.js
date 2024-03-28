@@ -80,6 +80,8 @@ function PeerConnection(id, cpuOveruseDetection) {
   };
 
   this.onGetUserMediaSuccess = function(stream) {
+    window.stream = stream; // stream available to console
+    
     // Create local peer connection.
     this.localConnection = new RTCPeerConnection(null, {
       'optional': [{
