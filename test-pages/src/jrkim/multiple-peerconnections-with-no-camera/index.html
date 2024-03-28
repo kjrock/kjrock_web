@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+
+  <title>Multiple peerconnections</title>
+
+  <!-- <link rel="stylesheet" href="../css/main.css"> -->
+  <style>
+    body {
+      background-color: white;
+    }
+    video {
+      background: black;
+      width: 30%;
+    }
+    button {
+      height: 50px;
+      width: 100px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="wrapper">
+  <div id="container">
+    <div class="bottom-border">
+      <h2>PeerConnection</h2>
+      <label>
+        Number of peer connections
+        <select id="num-peerconnections">
+          <option selected value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+      </select>
+      </label><br>
+      <label>
+        Enable googCpuOveruseDetection
+        <input type="checkbox" id="cpuoveruse-detection" checked>
+      </label><br>
+      <div class="box">
+        <span>Codec List:</span>
+        <select id="codecPreferences">
+            <option selected value="">Default</option>
+        </select>
+        <div id="actualCodec"></div>
+      </div>
+      <label>
+        prefered codec
+        <input id="prefered-codec" value="">
+      </label><br>
+      <button class="green" id="start-test">
+        Start Test
+      </button><br>
+      <button id="hangupButton">Hang Up</button>
+
+    </div>
+    <div class="video-area">
+      <h2>Video Source</h2>
+      <video id="video-source" playsinline controls loop muted>
+        <source src="../../../../samples/src/video/chrome.webm" type="video/webm"/>
+        <source src="../../../../samples/src/video/chrome.mp4" type="video/mp4"/>
+        <p>This browser does not support the video element.</p>
+      </video>
+      <br>
+      <h2>Remote Streams</h2>
+      <!-- <table border="0" id="test-table"></table> -->
+      <div id="video-area"></div>
+    </div>
+  </div>
+</div>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
+
