@@ -65,13 +65,17 @@
         prefered codec
         <input id="prefered-codec" value="">
       </label><br>
-      <button class="green" id="start-test">
-        Start Test
-      </button><br>
+      <button class="green" id="start-test">Start Test</button>
       <button id="hangupButton">Hang Up</button>
 
     </div>
     <div class="video-area">
+      <h2>Video Source</h2>
+      <video id="video-source" playsinline controls loop muted>
+        <source src="../../samples/src/video/chrome.webm" type="video/webm"/>
+        <source src="../../samples/src/video/chrome.mp4" type="video/mp4"/>
+        <p>This browser does not support the video element.</p>
+      </video>
       <br>
       <h2>Remote Streams</h2>
       <!-- <table border="0" id="test-table"></table> -->
