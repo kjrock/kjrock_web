@@ -24,7 +24,7 @@
 
   <link rel="icon" sizes="192x192" href="../test-pages/images/favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="../test-pages/css/landing_page.css" />
+  <!-- <link rel="stylesheet" href="../test-pages/css/landing_page.css" /> -->
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -35,25 +35,55 @@
     ga('send', 'pageview');
   </script>
   <style>
-      body {
-        background-color: white;
-      }
+    * {
+       box-sizing: border-box;
+    }
+
+    body {
+      background-color: white;
+      margin: 0;
+    }
+
+    .column {
+      float: left;
+      width: 20%;
+      padding: 10px;
+    }
+    
+    .row::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
   </style>
 </head>
 <body>
-  <div id="container">
+  <div id="container" class="row">
+    <div class="column">
+      <h1>WebRTC test</h1>
+      <a href="hwpreview/index.html">hw preview test</a><br>
+      <a href="transparency/index.html">transparency test</a><br>
+      <a href="suspend_resume/index.html">suspend_resume test</a><br>
+      <a href="multiple-peerconnections/index.html">multiple-peerconnections test</a><br>
+      <a href="multiple-peerconnections-with-no-camera/index.html">multiple-peerconnections-with-no-camera test</a><br>
+    </div>
+    <div class="column">
+      <h1>media test</h1>
 
-    <h1>WebRTC test pages</h1>
+    </div>
+    <div class="column">
+      <h1>other test</h1>
 
-    <section>
-      <p><a href="hwpreview/index.html">hw preview test</a></p>
-      <p><a href="transparency/index.html">transparency test</a></p>
-      <p><a href="suspend_resume/index.html">suspend_resume test</a></p>
-      <p><a href="multiple-peerconnections/index.html">multiple-peerconnections test</a></p>
-      <p><a href="multiple-peerconnections-with-no-camera/index.html">multiple-peerconnections-with-no-camera test</a></p>
+    </div>
+    <div class="column">
+      <h1>other2 test</h1>
 
-    </section>
+    </div>
+    <div class="column">
+      <h1>other3 test</h1>
 
+    </div>
   </div>
+
 </body>
 </html>
