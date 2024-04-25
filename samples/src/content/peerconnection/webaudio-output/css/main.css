@@ -40,3 +40,7 @@ video#remoteVideo {
     width: 83px;
   }
 }
+
+body {
+  background-color: white;
+}

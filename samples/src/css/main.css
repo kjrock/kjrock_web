@@ -38,6 +38,7 @@ body {
   margin: 0;
   padding: 1em;
   word-break: break-word;
+  background-color: white;
 }
 
 button {

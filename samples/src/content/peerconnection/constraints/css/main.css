@@ -112,3 +112,7 @@ video {
     height: 96px;
   }
 }
+
+body {
+  background-color: white;
+}

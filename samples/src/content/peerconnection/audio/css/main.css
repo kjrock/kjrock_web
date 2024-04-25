@@ -52,3 +52,7 @@ div.graph-container {
 a#viewSource {
   clear: both;
 }
+
+body {
+  background-color: white;
+}

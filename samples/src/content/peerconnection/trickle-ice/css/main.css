@@ -69,3 +69,7 @@ th:nth-child(6),td:nth-child(6) {
 #error-note {
   display: none;
 }
+
+body {
+  background-color: white;
+}

@@ -43,3 +43,7 @@ video#video1 {
     height: 231px;
   }
 }
+
+body {
+  background-color: white;
+}

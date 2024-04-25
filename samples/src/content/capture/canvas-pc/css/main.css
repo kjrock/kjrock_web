@@ -26,3 +26,7 @@ video {
 #autoplay {
   display: none;
 }
+
+body {
+  background-color: white;
+}

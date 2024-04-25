@@ -85,4 +85,6 @@ div#parameters label {
   width: 68px;
 }
 
-
+body {
+  background-color: white;
+}

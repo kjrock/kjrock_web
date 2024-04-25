@@ -100,3 +100,7 @@ video {
     font-size: 0.5em;
   }
 }
+
+body {
+  background-color: white;
+}

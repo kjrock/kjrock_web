@@ -47,3 +47,7 @@ ul {
   list-style-type: square;
   padding: 0 0 0 18px;
 }
+
+body {
+  background-color: white;
+}

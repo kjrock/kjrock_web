@@ -21,3 +21,7 @@ video:last-of-type {
     width: calc(50% - 5px);
   }
 }
+
+body {
+  background-color: white;
+}

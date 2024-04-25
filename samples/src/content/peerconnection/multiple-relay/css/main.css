@@ -32,3 +32,6 @@ video {
   height: calc(var(--width) * 0.75);
 }
 
+body {
+  background-color: white;
+}

@@ -108,3 +108,7 @@ video {
     width: calc(50% - 14px);
   }
 }
+
+body {
+  background-color: white;
+}
