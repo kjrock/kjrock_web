@@ -29,10 +29,16 @@
 
 <body>
 <div id="container">
-
+    <div id="buttons">
+        <button id="TV">TV</button>
+        <button id="HDMI_1">HDMI_1</button>
+        <button id="HDMI_2">HDMI_2</button>
+        <button id="HDMI_3">HDMI_3</button>
+        <button id="HDMI_4">HDMI_4</button>
+    </div>
     <div id="videoblock">
         <video id="player" controls width="640" height="360" autoplay>
-            <source src="ext://hdmi:1" type="service/webos-external">
+            <!-- <source src="ext://hdmi:1" type="service/webos-external"> -->
         </video>
     </div>
     <p id="errormessage"></p>
