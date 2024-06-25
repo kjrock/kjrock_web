@@ -10,6 +10,9 @@ const buttonHdmi1 = document.querySelector('#HDMI_1');
 const buttonHdmi2 = document.querySelector('#HDMI_2');
 const buttonHdmi3 = document.querySelector('#HDMI_3');
 const buttonHdmi4 = document.querySelector('#HDMI_4');
+const buttonUsb_c = document.querySelector('#USB_C');
+const buttonDisplayPort = document.querySelector('#DisplayPort');
+const buttonDISPLAYPORT = document.querySelector('#DISPLAYPORT');
 
 buttonTv.onclick = () => {
   videoblock.removeChild(video)
@@ -35,6 +38,21 @@ buttonHdmi3.onclick = () => {
 buttonHdmi4.onclick = () => {
   videoblock.removeChild(video)
   video.innerHTML = '<source src="ext://hdmi:4" type="service/webos-external">'
+  videoblock.appendChild(video)
+};
+buttonUsb_c.onclick = () => {
+  videoblock.removeChild(video)
+  video.innerHTML = '<source src="ext://USB-C:1" type="service/webos-external">'
+  videoblock.appendChild(video)
+};
+buttonDisplayPort.onclick = () => {
+  videoblock.removeChild(video)
+  video.innerHTML = '<source src="ext://DisplayPort:1" type="service/webos-external">'
+  videoblock.appendChild(video)
+};
+buttonDISPLAYPORT.onclick = () => {
+  videoblock.removeChild(video)
+  video.innerHTML = '<source src="ext://DISPLAYPORT:1" type="service/webos-external">'
   videoblock.appendChild(video)
 };
 
