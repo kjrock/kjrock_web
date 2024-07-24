@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <meta itemprop="image" content="../../samples/src/images/webrtc-icon-192x192.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+
+    <base target="_blank">
+
+    <title>getUserMedia: select resolution</title>
+
+    <link rel="icon" sizes="192x192" href="../../samples/src/images/webrtc-icon-192x192.png">
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../../samples/src/css/main.css">
+
+    <style>
+ body {
+  font:
+    14px "Open Sans",
+    "Arial",
+    sans-serif;
+}
+
+video {
+  margin-top: 20px;
+  border: 1px solid black;
+}
+
+.button {
+  cursor: pointer;
+  width: 160px;
+  border: 1px solid black;
+  font-size: 16px;
+  text-align: center;
+  padding-top: 2px;
+  padding-bottom: 4px;
+  color: white;
+  background-color: darkgreen;
+}
+
+h2 {
+  margin-bottom: 4px;
+}
+
+.left {
+  float: left;
+  width: 48%;
+  margin-right: 2%;
+}
+
+.right {
+  float: right;
+  width: 48%;
+  margin-left: 2%;
+}
+
+.deviceList {
+  border: 1px solid black;
+  list-style-type: none;
+  margin-top: 2px;
+  padding: 6px;
+}
+    </style>
+
+</head>
+
+<body>
+
+    <p>Click the start button below to begin the demonstration.</p>
+    <div id="startButton" class="button">Start</div>
+    <video id="video" width="160" height="120" autoplay></video><br />
+    
+    <div class="left">
+      <h2>Audio devices:</h2>
+      <ul class="deviceList" id="audioList"></ul>
+    </div>
+    <div class="right">
+      <h2>Video devices:</h2>
+      <ul class="deviceList" id="videoList"></ul>
+    </div>
+    
+    <output></output>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="js/main.js" async></script>
+
+<script src="../../samples/src/js/lib/ga.js"></script>
+
+</body>
+</html>
