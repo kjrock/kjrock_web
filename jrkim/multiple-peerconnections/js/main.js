@@ -51,7 +51,13 @@ function addNewVideoElement() {
   var video = document.createElement('video');
   let pc_num =
    nPeerConnectionsInput.options[nPeerConnectionsInput.selectedIndex].value;
-  var w =  (100/pc_num) + "%";
+  var w =  (100/pc_num);
+  if (w > 20) {
+    w = 20;
+  }
+
+  w = w + "%";
+
   console.log("w : " + w);
   video.style.width = w;
   video.autoplay = true;
@@ -73,7 +79,7 @@ function PeerConnection(id, cpuOveruseDetection) {
     var onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
     navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: true
+      video: {width: {ideal: 1280}, height: {ideal: 720}}
     })
       .then(onGetUserMediaSuccess)
       .catch(logError);
