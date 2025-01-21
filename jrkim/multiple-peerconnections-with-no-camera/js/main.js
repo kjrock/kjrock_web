@@ -85,8 +85,8 @@ function addNewVideoElement() {
   let pc_num =
    nPeerConnectionsInput.options[nPeerConnectionsInput.selectedIndex].value;
   var w =  (100/pc_num);
-  if (w > 20) {
-    w = 20;
+  if (w > 30) {
+    w = 30;
   }
 
   w = w + "%";
