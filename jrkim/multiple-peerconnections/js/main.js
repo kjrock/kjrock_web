@@ -18,6 +18,17 @@ var nPeerConnectionsInput = $('num-peerconnections');
 var videoWidth = $('video-width');
 var startTestButton = $('start-test');
 const hangupButton = document.getElementById('hangupButton');
+const hdCamera = document.querySelector('#hd-camera');
+
+const sdConstraints = {
+  audio: true,
+  video: true
+};
+
+const hdConstraints = {
+  audio: true,
+  video: {width: {ideal: 1280}, height: {ideal: 720}}
+};
 
 startTestButton.disabled = false;
 hangupButton.disabled = true;
@@ -77,12 +88,14 @@ function PeerConnection(id, cpuOveruseDetection) {
 
   this.start = function() {
     var onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
-    navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: {width: {ideal: 1280}, height: {ideal: 720}}
-    })
-      .then(onGetUserMediaSuccess)
-      .catch(logError);
+
+    let constraints = (hdCamera.checked) ? hdConstraints : sdConstraints;
+   console.log(" hdCamera.checked: ",  hdCamera.checked);
+
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then(onGetUserMediaSuccess)
+    .catch(logError);
+
   };
 
   this.onGetUserMediaSuccess = function(stream) {
