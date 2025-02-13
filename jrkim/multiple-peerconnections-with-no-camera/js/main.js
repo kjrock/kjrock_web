@@ -42,6 +42,7 @@ const videoSource = document.getElementById('video-source');
 const videoSourceList = document.getElementById('video-sources');
 videoSourceList.addEventListener('change', () => {
   const source = document.querySelector('source');
+  mediaStream = null;
   source.setAttribute('src', videoSourceList.options[videoSourceList.selectedIndex].value);
   videoSource.load();
   videoSource.play();
