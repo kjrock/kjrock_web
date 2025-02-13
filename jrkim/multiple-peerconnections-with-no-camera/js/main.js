@@ -39,6 +39,14 @@ let PCs = [];
 let mediaStream = null;
 const videoSource = document.getElementById('video-source');
 
+const videoSourceList = document.getElementById('video-sources');
+videoSourceList.addEventListener('change', () => {
+  const source = document.querySelector('source');
+  source.setAttribute('src', videoSourceList.options[videoSourceList.selectedIndex].value);
+  videoSource.load();
+  videoSource.play();
+});
+
 function maybeCreateStream() {
   if (mediaStream) {
     return;

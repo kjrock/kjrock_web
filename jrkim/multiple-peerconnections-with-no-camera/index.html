@@ -24,7 +24,6 @@
       height: 50px;
       width: 100px;
     }
-}
 </style>
 
 </head>
@@ -35,6 +34,14 @@
   <div id="container">
     <div class="bottom-border">
       <h2>multiple-peerconnections-with-no-camera</h2>
+      <label>
+        source video
+        <select id="video-sources">
+          <option selected value="../../samples/src/video/trailer.mp4">0.trailer.mp4 (854 × 480)</option>
+          <option value="../../samples/src/video/chrome.mp4">1.chrome.mp4 (480 × 270)</option>
+      </select>
+      </label><br>
+
       <label>
         Number of peer connections
         <select id="num-peerconnections">
@@ -69,12 +76,12 @@
       <button id="hangupButton">Hang Up</button>
 
     </div>
+
     <div class="video-area">
       <h2>Video Source</h2>
       <video id="video-source" playsinline controls loop muted>
-        <source src="../../samples/src/video/chrome.webm" type="video/webm;decoder=sw"/>
-        <source src="../../samples/src/video/chrome.mp4" type="video/mp4;decoder=sw"/>
-        <p>This browser does not support the video element.</p>
+        <source src="../../samples/src/video/trailer.mp4"
+          type="video/mp4;decoder=sw" />
       </video>
       <br>
       <h2>Remote Streams</h2>
