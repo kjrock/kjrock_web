@@ -102,6 +102,7 @@ function addNewVideoElement() {
   console.log("w : " + w);
   video.style.width = w;
   video.autoplay = true;
+  video.controls = true;
   videoArea.appendChild(video);
 
   return video;
