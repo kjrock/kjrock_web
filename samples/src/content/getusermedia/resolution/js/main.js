@@ -190,7 +190,6 @@ sizeLock.onchange = () => {
 function getMedia(constraints) {
   if (stream) {
     stream.getTracks().forEach(track => {
-      console.error("call track->stop()");
       track.stop();
     });
   }

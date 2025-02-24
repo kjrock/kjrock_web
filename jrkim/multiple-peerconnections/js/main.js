@@ -82,6 +82,7 @@ codecPreferences.addEventListener('change', () => {
 });
 
 var PCs = [];
+let streams = [];
 
 function logError(err) {
   console.log(err);
@@ -149,6 +150,7 @@ function PeerConnection(id, cpuOveruseDetection) {
   this.onGetUserMediaSuccess = function(stream) {
     window.stream = stream; // stream available to console
     localCamera.srcObject = stream;
+    streams.push(stream);
 
     // Create local peer connection.
     this.localConnection = new RTCPeerConnection(null, {
@@ -250,10 +252,12 @@ function hangup() {
   hangupButton.disabled = true;
   // codecPreferences.disabled = false;
 
-  if (stream) {
-    stream.getTracks().forEach(track => {
-      console.error("call track->stop()");
-      track.stop();
+  if (streams.length) {
+    streams.forEach(stream => {
+      stream.getTracks().forEach(track => {
+        track.stop();
+      });
     });
   }
+  while(streams.pop()){}
 }
