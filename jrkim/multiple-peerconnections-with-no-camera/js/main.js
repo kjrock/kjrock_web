@@ -108,6 +108,20 @@ function addNewVideoElement() {
   return video;
 }
 
+if (supportsSetCodecPreferences) {
+  const {codecs} = RTCRtpSender.getCapabilities('video');
+  codecs.forEach(codec => {
+    if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
+      return;
+    }
+    const option = document.createElement('option');
+    option.value = (codec.mimeType + ' ' + (codec.sdpFmtpLine || '')).trim();
+    option.innerText = option.value;
+    codecPreferences.appendChild(option);
+    console.log(option.value);
+  });
+}
+
 function PeerConnection(id, cpuOveruseDetection) {
   this.id = id;
   this.cpuOveruseDetection = cpuOveruseDetection;
@@ -157,17 +171,6 @@ function PeerConnection(id, cpuOveruseDetection) {
     };
 
     if (supportsSetCodecPreferences) {
-      const {codecs} = RTCRtpSender.getCapabilities('video');
-      codecs.forEach(codec => {
-        if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
-          return;
-        }
-        const option = document.createElement('option');
-        option.value = (codec.mimeType + ' ' + (codec.sdpFmtpLine || '')).trim();
-        option.innerText = option.value;
-        codecPreferences.appendChild(option);
-        console.log(option.value);
-      });
       if (preferredCodec.value !== '') {
         const [mimeType, sdpFmtpLine] = preferredCodec.value.split(' ');
         const {codecs} = RTCRtpSender.getCapabilities('video');
@@ -237,9 +240,9 @@ function hangup() {
 
   while(PCs.pop()){}
 
-  codecPreferences.innerHTML = ""
+  // codecPreferences.innerHTML = ""
   videoArea.innerHTML = "";
   startTestButton.disabled = false;
   hangupButton.disabled = true;
-  codecPreferences.disabled = false;
+  // codecPreferences.disabled = false;
 }

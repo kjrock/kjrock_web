@@ -18,13 +18,12 @@
     }
     video {
       background: black;
-      width: 30%;
+      width: 20%;
     }
     button {
       height: 50px;
       width: 100px;
     }
-}
 </style>
 
 </head>
@@ -51,6 +50,18 @@
       </select>
       </label><br>
       <label>
+        Camera constraints
+        <select id="camera-constraints">
+          <option  value="180p">320x180</option>
+          <option value="240p">320x240</option>
+          <option value="360p">640x360</option>
+          <option selected value="480p">640x480</option>
+          <option value="540p">960x540</option>
+          <option value="720p">1280x720</option>
+          <option value="1080p">1920x1080</option>
+      </select>
+      </label><br>
+      <label>
         Enable googCpuOveruseDetection
         <input type="checkbox" id="cpuoveruse-detection" checked>
       </label><br>
@@ -65,12 +76,14 @@
         prefered codec
         <input id="prefered-codec" value="">
       </label><br>
-      <input id="hd-camera" type="checkbox">HD camera<br>
       <button class="green" id="start-test">Start Test</button>
       <button id="hangupButton">Hang Up</button>
 
     </div>
     <div class="video-area">
+      <h3>Camera</h3>
+      <video id="local-camera" controls autoplay playsinline>
+      </video>
       <br>
       <h2>Remote Streams</h2>
       <!-- <table border="0" id="test-table"></table> -->

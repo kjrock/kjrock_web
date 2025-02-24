@@ -12,23 +12,58 @@
 
 var $ = document.getElementById.bind(document);
 
-// var testTable = $('test-table');
+let localCamera = $('local-camera');
 var videoArea = $('video-area');
 var nPeerConnectionsInput = $('num-peerconnections');
+let cameraConstraintSel = $('camera-constraints');
 var videoWidth = $('video-width');
 var startTestButton = $('start-test');
 const hangupButton = document.getElementById('hangupButton');
-const hdCamera = document.querySelector('#hd-camera');
 
-const sdConstraints = {
+const _180pConstraints = {
   audio: true,
-  video: true
+  video: {width: {ideal: 320}, height: {ideal: 180}}
 };
 
-const hdConstraints = {
+const _240pConstraints = {
+  audio: true,
+  video: {width: {ideal: 320}, height: {ideal: 240}}
+};
+
+const _360pConstraints = {
+  audio: true,
+  video: {width: {ideal: 640}, height: {ideal: 360}}
+};
+
+const _480pConstraints = {
+  audio: true,
+  video: {width: {ideal: 640}, height: {ideal: 480}}
+};
+
+const _540pConstraints = {
+  audio: true,
+  video: {width: {ideal: 960}, height: {ideal: 540}}
+};
+
+const _720pConstraints = {
   audio: true,
   video: {width: {ideal: 1280}, height: {ideal: 720}}
 };
+
+const _1080pConstraints = {
+  audio: true,
+  video: {width: {ideal: 1920}, height: {ideal: 1080}}
+};
+
+let cameraConstraints = { 
+"180p": _180pConstraints,
+"240p": _240pConstraints,
+"360p": _360pConstraints,
+"480p": _480pConstraints,
+"540p": _540pConstraints,
+"720p": _720pConstraints,
+"1080p": _1080pConstraints,
+}
 
 startTestButton.disabled = false;
 hangupButton.disabled = true;
@@ -72,9 +107,24 @@ function addNewVideoElement() {
   console.log("w : " + w);
   video.style.width = w;
   video.autoplay = true;
+  video.controls = true;
   videoArea.appendChild(video);
 
   return video;
+}
+
+if (supportsSetCodecPreferences) {
+  const {codecs} = RTCRtpSender.getCapabilities('video');
+  codecs.forEach(codec => {
+    if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
+      return;
+    }
+    const option = document.createElement('option');
+    option.value = (codec.mimeType + ' ' + (codec.sdpFmtpLine || '')).trim();
+    option.innerText = option.value;
+    codecPreferences.appendChild(option);
+    console.log(option.value);
+  });
 }
 
 function PeerConnection(id, cpuOveruseDetection) {
@@ -88,19 +138,18 @@ function PeerConnection(id, cpuOveruseDetection) {
 
   this.start = function() {
     var onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
+    let constraintVal =
+    cameraConstraintSel.options[cameraConstraintSel.selectedIndex].value;
 
-    let constraints = (hdCamera.checked) ? hdConstraints : sdConstraints;
-   console.log(" hdCamera.checked: ",  hdCamera.checked);
-
-  navigator.mediaDevices.getUserMedia(constraints)
+  navigator.mediaDevices.getUserMedia(cameraConstraints[constraintVal])
     .then(onGetUserMediaSuccess)
     .catch(logError);
-
   };
 
   this.onGetUserMediaSuccess = function(stream) {
     window.stream = stream; // stream available to console
-    
+    localCamera.srcObject = stream;
+
     // Create local peer connection.
     this.localConnection = new RTCPeerConnection(null, {
       'optional': [{
@@ -126,17 +175,6 @@ function PeerConnection(id, cpuOveruseDetection) {
     };
 
     if (supportsSetCodecPreferences) {
-      const {codecs} = RTCRtpSender.getCapabilities('video');
-      codecs.forEach(codec => {
-        if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
-          return;
-        }
-        const option = document.createElement('option');
-        option.value = (codec.mimeType + ' ' + (codec.sdpFmtpLine || '')).trim();
-        option.innerText = option.value;
-        codecPreferences.appendChild(option);
-        console.log(option.value);
-      });
       if (preferredCodec.value !== '') {
         const [mimeType, sdpFmtpLine] = preferredCodec.value.split(' ');
         const {codecs} = RTCRtpSender.getCapabilities('video');
@@ -206,9 +244,16 @@ function hangup() {
 
   while(PCs.pop()){}
 
-  codecPreferences.innerHTML = ""
+  // codecPreferences.innerHTML = ""
   videoArea.innerHTML = "";
   startTestButton.disabled = false;
   hangupButton.disabled = true;
-  codecPreferences.disabled = false;
+  // codecPreferences.disabled = false;
+
+  if (stream) {
+    stream.getTracks().forEach(track => {
+      console.error("call track->stop()");
+      track.stop();
+    });
+  }
 }
