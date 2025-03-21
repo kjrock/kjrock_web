@@ -92,6 +92,7 @@ function logError(err) {
 function getVideoNum() {
   return nVideosInput.options[nVideosInput.selectedIndex].value;
 }
+
 function addNewVideoElement() {
   // var newRow = testTable.insertRow(-1);
   // var newCell = newRow.insertCell(-1);
