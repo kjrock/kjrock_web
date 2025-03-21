@@ -15,6 +15,7 @@ var $ = document.getElementById.bind(document);
 let localCamera = $('local-camera');
 var videoArea = $('video-area');
 let pc_num = 1;
+var nVideosInput = $('num-videos');
 let cameraConstraintSel = $('camera-constraints');
 var videoWidth = $('video-width');
 var startTestButton = $('start-test');
@@ -88,6 +89,9 @@ function logError(err) {
   console.log(err);
 }
 
+function getVideoNum() {
+  return nVideosInput.options[nVideosInput.selectedIndex].value;
+}
 function addNewVideoElement() {
   // var newRow = testTable.insertRow(-1);
   // var newCell = newRow.insertCell(-1);
@@ -96,7 +100,7 @@ function addNewVideoElement() {
   // newCell.appendChild(video);
 
   var video = document.createElement('video');
-  var w =  (100/pc_num);
+  var w =  (100/getVideoNum());
   if (w > 30) {
     w = 30;
   }
@@ -134,8 +138,10 @@ function PeerConnection(id, cpuOveruseDetection) {
   this.remoteConnection = null;
 
   this.remoteViews = [];
-  this.remoteViews.push(addNewVideoElement());
-  this.remoteViews.push(addNewVideoElement());
+  let num = getVideoNum();
+  for (var i = 0; i < num; ++i) {
+    this.remoteViews.push(addNewVideoElement());
+  }
 
   this.start = function() {
     var onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
