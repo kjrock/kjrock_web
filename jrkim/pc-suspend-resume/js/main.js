@@ -25,8 +25,6 @@ hangupButton.disabled = true;
 startTestButton.onclick = startTest;
 hangupButton.addEventListener('click', hangup);
 
-
-var cpuOveruseDetectionCheckbox = $('cpuoveruse-detection');
 const codecPreferences = document.getElementById('codecPreferences');
 const supportsSetCodecPreferences = window.RTCRtpTransceiver &&
   'setCodecPreferences' in window.RTCRtpTransceiver.prototype;
@@ -38,15 +36,6 @@ codecPreferences.addEventListener('change', () => {
 let PCs = [];
 let mediaStream = null;
 const videoSource = document.getElementById('video-source');
-
-const videoSourceList = document.getElementById('video-sources');
-videoSourceList.addEventListener('change', () => {
-  const source = document.querySelector('source');
-  mediaStream = null;
-  source.setAttribute('src', videoSourceList.options[videoSourceList.selectedIndex].value);
-  videoSource.load();
-  videoSource.play();
-});
 
 function maybeCreateStream() {
   if (mediaStream) {
@@ -218,7 +207,7 @@ function PeerConnection(id, cpuOveruseDetection) {
 function startTest() {
   startTestButton.disabled = true;
   hangupButton.disabled = false;
-  var cpuOveruseDetection = cpuOveruseDetectionCheckbox.checked;
+  var cpuOveruseDetection = true;
   let pc_num =
     nPeerConnectionsInput.options[nPeerConnectionsInput.selectedIndex].value;
   for (var i = 0; i < pc_num; ++i) {
@@ -246,3 +235,12 @@ function hangup() {
   hangupButton.disabled = true;
   // codecPreferences.disabled = false;
 }
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+   console.error("kjrock: document.hidden : call hangup");
+   hangup();
+  } else {
+    console.error("kjrock: document.visible");
+  }
+});
