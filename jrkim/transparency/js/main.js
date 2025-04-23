@@ -11,7 +11,8 @@
 const dimensions = document.querySelector('#dimensions');
 const video = document.querySelector('video');
 let stream;
-
+const redButton = document.querySelector('#red');
+const blueButton = document.querySelector('#blue');
 const vgaButton = document.querySelector('#vga');
 const qvgaButton = document.querySelector('#qvga');
 const hdButton = document.querySelector('#hd');
@@ -30,6 +31,14 @@ const sizeLock = document.querySelector('#sizelock');
 
 let currentWidth = 0;
 let currentHeight = 0;
+
+redButton.onclick = () => {
+ videoblock.style.backgroundColor="red";
+}
+
+blueButton.onclick = () => {
+  videoblock.style.backgroundColor="blue";
+ }
 
 vgaButton.onclick = () => {
   getMedia(vgaConstraints);
