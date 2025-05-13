@@ -186,7 +186,10 @@ sizeLock.onchange = () => {
 };
 
 function getMedia(constraints) {
-  constraints.video.hwPreview = hwPreview.checked;
+  let hwpreview = hwPreview.checked;
+  if (hwpreview) {
+    constraints.video.hwPreview = hwpreview;
+  }
   
   let framerate =
     cameraFramerate.options[cameraFramerate.selectedIndex].value;
