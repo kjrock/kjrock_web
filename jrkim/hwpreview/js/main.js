@@ -27,6 +27,8 @@ const widthInput = document.querySelector('div#width input');
 const widthOutput = document.querySelector('div#width span');
 const aspectLock = document.querySelector('#aspectlock');
 const sizeLock = document.querySelector('#sizelock');
+const hwPreview = document.querySelector('#hwpreview');
+const cameraFramerate = document.querySelector('#camera-framerate');
 
 let currentWidth = 0;
 let currentHeight = 0;
@@ -60,19 +62,19 @@ eightKButton.onclick = () => {
 };
 
 const qvgaConstraints = {
-  video: {width: {exact: 320}, height: {exact: 240}, hwPreview: false}
+  video: {width: {exact: 320}, height: {exact: 240}}
 };
 
 const vgaConstraints = {
-  video: {width: {exact: 640}, height: {exact: 480}, hwPreview: false}
+  video: {width: {exact: 640}, height: {exact: 480}}
 };
 
 const hdConstraints = {
-  video: {width: {exact: 1280}, height: {exact: 720}, hwPreview: true}
+  video: {width: {exact: 1280}, height: {exact: 720}}
 };
 
 const fullHdConstraints = {
-  video: {width: {exact: 1920}, height: {exact: 1080}, hwPreview: true}
+  video: {width: {exact: 1920}, height: {exact: 1080}}
 };
 
 const televisionFourKConstraints = {
@@ -184,6 +186,16 @@ sizeLock.onchange = () => {
 };
 
 function getMedia(constraints) {
+  constraints.video.hwPreview = hwPreview.checked;
+  
+  let framerate =
+    cameraFramerate.options[cameraFramerate.selectedIndex].value;
+  
+  constraints.video.frameRate = {};
+  constraints.video.frameRate.ideal = framerate;
+
+  console.log('[getMedia] constraints: ' + JSON.stringify(constraints));
+
   if (stream) {
     stream.getTracks().forEach(track => {
       console.error("call track->stop()");

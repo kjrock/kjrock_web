@@ -71,14 +71,28 @@
 </head>
 
 <body>
-
-<div id="container">
-    <h2>hwpreview test</h2>
+<div>    
+    <h2>camera preview test</h2>
+    <label>
+        Enable hwpreview
+        <input type="checkbox" id="hwpreview" checked>
+    </label><br>
+    <label>
+        Camera framerate
+        <select id="camera-framerate">
+          <option  value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option selected value="30">30</option>
+        </select>
+    </label><br>
     <div id="buttons">
-        <button id="qvga">QVGA (hw preview off)</button>
-        <button id="vga">VGA (hw preview off)</button>
-        <button id="hd">HD (hw preview on)</button>
-        <button id="full-hd">Full HD (hw preview on)</button>
+        <button id="qvga">QVGA</button>
+        <button id="vga">VGA</button>
+        <button id="hd">HD</button>
+        <button id="full-hd">Full HD</button>
         <button id="televisionFourK">Television 4K (3840x2160)</button>
         <button id="cinemaFourK">Cinema 4K (4096x2160)</button>
         <button id="eightK">8K</button>
