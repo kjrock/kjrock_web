@@ -69,19 +69,23 @@ eightKButton.onclick = () => {
 };
 
 const qvgaConstraints = {
-  video: {width: {exact: 320}, height: {exact: 240}, transparency: false}
+  audio: true,
+  video: {width: {exact: 320}, height: {exact: 240}}
 };
 
 const vgaConstraints = {
-  video: {width: {exact: 640}, height: {exact: 480}, transparency: false}
+  audio: true,
+  video: {width: {exact: 640}, height: {exact: 480}, webos: {ideal: '{"transparency":true}'}}
 };
 
 const hdConstraints = {
-  video: {width: {exact: 1280}, height: {exact: 720}, transparency: true}
+  audio: true,
+  video: {width: {exact: 1280}, height: {exact: 720}, webos: {exact: '{"hwPreview":true}'}}
 };
 
 const fullHdConstraints = {
-  video: {width: {exact: 1920}, height: {exact: 1080}, transparency: true}
+  audio: true,
+  video: {width: {exact: 1920}, height: {exact: 1080}}
 };
 
 const televisionFourKConstraints = {
