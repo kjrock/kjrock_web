@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+
+  <title>Multiple peerconnections</title>
+  <!-- <link rel="stylesheet" href="../css/main.css"> -->
+  <style>
+    body {
+      background-color: white;
+    }
+    video {
+      background: black;
+      width: 20%;
+    }
+    button {
+      height: 50px;
+      width: 100px;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="wrapper">
+  <div id="container">
+    <div class="bottom-border">
+      <h2>multiple-peerconnections</h2>
+      <label>Camera constraints
+        <select id="camera-constraints">
+          <option  value="180p">320x180</option>
+          <option value="240p">320x240</option>
+          <option value="360p">640x360</option>
+          <option selected value="480p">640x480</option>
+          <option value="540p">960x540</option>
+          <option value="720p">1280x720</option>
+          <option value="1080p">1920x1080</option>
+      </select>
+      </label>
+      <div class="box">
+        <span>Codec List:</span>
+        <select id="codecPreferences">
+            <option selected value="">Default</option>
+        </select>
+        <!-- <div id="actualCodec"></div> -->
+      </div>
+      <label>prefered codec <input id="prefered-codec" value=""></label>
+      <label>websocket server <input id="websocket-server" value="10.157.78.91:8081"></label>
+      <label>room-id <input id="room-id" value=""></label>
+      <label>my-id: <span id="my-id"></span>,</label>
+      <label>num-peerconnections <input id="num-peerconnections" value="3"></label><br>
+      <button class="green" id="start-test">Start Test</button>
+      <button id="hangupButton">Hang Up</button>
+
+    </div>
+    <div class="video-area">
+      <h3>Camera</h3>
+      <video id="local-camera" controls autoplay playsinline></video><br>
+      <h2>Remote Streams</h2>
+      <!-- <table border="0" id="test-table"></table> -->
+      <div id="video-area"></div>
+    </div>
+  </div>
+</div>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
+
