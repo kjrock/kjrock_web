@@ -70,12 +70,12 @@ eightKButton.onclick = () => {
 
 const qvgaConstraints = {
   audio: true,
-  video: {width: {exact: 320}, height: {exact: 240}}
+  video: {width: {exact: 320}, height: {exact: 240}, webos: {ideal: '{"transparency":true}'}}
 };
 
 const vgaConstraints = {
   audio: true,
-  video: {width: {exact: 640}, height: {exact: 480}, webos: {ideal: '{"transparency":true}'}}
+  video: {width: {exact: 640}, height: {exact: 480}, webos: {ideal: {"transparency":true}}}
 };
 
 const hdConstraints = {
@@ -85,7 +85,7 @@ const hdConstraints = {
 
 const fullHdConstraints = {
   audio: true,
-  video: {width: {exact: 1920}, height: {exact: 1080}}
+  video: {width: {exact: 1920}, height: {exact: 1080}, webos: {exact: {"hwPreview":true}}}
 };
 
 const televisionFourKConstraints = {
