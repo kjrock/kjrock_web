@@ -41,13 +41,13 @@ blueButton.onclick = () => {
  }
 
 vgaButton.onclick = () => {
-  let webos_opt = {exact: JSON.stringify({"hwPreview":true})}
-  vgaConstraints.video.webos = webos_opt;
+  vgaConstraints.video.webos = {exact: JSON.stringify({"hwPreview":true})};
   console.log("constraints: ", JSON.stringify(vgaConstraints));
   getMedia(vgaConstraints);
 };
 
 qvgaButton.onclick = () => {
+  vgaConstraints.video.webos = JSON.stringify({"hwPreview":true});
   getMedia(qvgaConstraints);
 };
 
