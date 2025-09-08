@@ -41,6 +41,9 @@ blueButton.onclick = () => {
  }
 
 vgaButton.onclick = () => {
+  let webos_opt = {exact: JSON.stringify({"hwPreview":true})}
+  vgaConstraints.video.webos = webos_opt;
+  console.log("constraints: ", JSON.stringify(vgaConstraints));
   getMedia(vgaConstraints);
 };
 
@@ -49,10 +52,12 @@ qvgaButton.onclick = () => {
 };
 
 hdButton.onclick = () => {
+  console.log("constraints: ", JSON.stringify(hdConstraints));
   getMedia(hdConstraints);
 };
 
 fullHdButton.onclick = () => {
+  console.log("constraints: ", JSON.stringify(fullHdConstraints));
   getMedia(fullHdConstraints);
 };
 
@@ -68,49 +73,49 @@ eightKButton.onclick = () => {
   getMedia(eightKConstraints);
 };
 
-const qvgaConstraints = {
+let qvgaConstraints = {
   audio: true,
-  video: {width: {exact: 320}, height: {exact: 240}, webos: {ideal: '{"transparency":true}'}}
+  video: {width: {exact: 320}, height: {exact: 240}}
 };
 
-const vgaConstraints = {
+let vgaConstraints = {
   audio: true,
-  video: {width: {exact: 640}, height: {exact: 480}, webos: {ideal: {"transparency":true}}}
+  video: {width: {exact: 640}, height: {exact: 480}}
 };
 
-const hdConstraints = {
+let hdConstraints = {
   audio: true,
   video: {width: {exact: 1280}, height: {exact: 720}, webos: {exact: '{"hwPreview":true}'}}
 };
 
-const fullHdConstraints = {
+let fullHdConstraints = {
   audio: true,
-  video: {width: {exact: 1920}, height: {exact: 1080}, webos: {exact: {"hwPreview":true}}}
+  video: {width: {exact: 1920}, height: {exact: 1080}, webos: {exact: JSON.stringify({"hwPreview":true})}}
 };
 
-const televisionFourKConstraints = {
+let televisionFourKConstraints = {
   video: {width: {exact: 3840}, height: {exact: 2160}}
 };
 
-const cinemaFourKConstraints = {
+let cinemaFourKConstraints = {
   video: {width: {exact: 4096}, height: {exact: 2160}}
 };
 
-const eightKConstraints = {
+let eightKConstraints = {
   video: {width: {exact: 7680}, height: {exact: 4320}}
 };
 
 function gotStream(mediaStream) {
   stream = window.stream = mediaStream; // stream available to console
   stream.addEventListener("inactive", () => {
-    console.error("stream->inactive..")
+    console.log("stream->inactive..")
   });
   video.srcObject = mediaStream;
   messagebox.style.display = 'none';
   videoblock.style.display = 'block';
   const track = mediaStream.getVideoTracks()[0];
   track.addEventListener("ended", () => {
-    console.error("track->ended..")
+    console.log("track->ended..")
   });
 
   const constraints = track.getConstraints();
@@ -199,7 +204,7 @@ sizeLock.onchange = () => {
 function getMedia(constraints) {
   if (stream) {
     stream.getTracks().forEach(track => {
-      console.error("call track->stop()");
+      console.log("call track->stop()");
       track.stop();
     });
   }
