@@ -9,7 +9,7 @@
 <html>
 <head>
 
-  <title>peerconnections-websocket</title>
+  <title>peerconnections-websocket-with-no-camera</title>
   <!-- <link rel="stylesheet" href="../css/main.css"> -->
   <style>
     body {
@@ -31,18 +31,18 @@
 <div id="wrapper">
   <div id="container">
     <div class="bottom-border">
-      <h2>peerconnections-websocket</h2>
-      <label>Camera constraints
-        <select id="camera-constraints">
-          <option  value="180p">320x180</option>
-          <option value="240p">320x240</option>
-          <option value="360p">640x360</option>
-          <option selected value="480p">640x480</option>
-          <option value="540p">960x540</option>
-          <option value="720p">1280x720</option>
-          <option value="1080p">1920x1080</option>
+      <h2>peerconnections-websocket-with-no-camera</h2>
+
+      <label>
+        source video
+        <select id="video-sources">
+          <option value="../../samples/src/video/SampleVideo_360x240_1mb.mp4">1.SampleVideo_360x240_1mb.mp4 (320 × 240)</option>
+          <option selected value="../../samples/src/video/chrome.mp4">2.chrome.mp4 (480 × 270)</option>
+          <option value="../../samples/src/video/trailer.mp4">3.trailer.mp4 (854 × 480)</option>
+          <option value="../../samples/src/video/ForBiggerEscapes.mp4">4.ForBiggerEscapes.mp4 (1280 × 720)</option>
       </select>
-      </label>
+      </label><br>
+
       <div class="box">
         <span>Codec List:</span>
         <select id="codecPreferences">
@@ -60,8 +60,13 @@
 
     </div>
     <div class="video-area">
-      <h3>Camera</h3>
-      <video id="local-camera" controls autoplay playsinline></video><br>
+      <h3>Video Source</h3>
+      <video id="video-source" playsinline controls loop muted>
+        <source src="../../samples/src/video/chrome.mp4"
+          type="video/mp4;decoder=sw" />
+      </video>
+
+
       <h2>Remote Streams</h2>
       <!-- <table border="0" id="test-table"></table> -->
       <div id="video-area"></div>
