@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiple peer connections Test</title>
+</head>
+
+<body style="background-color: white;">
+<div id="container">
+    <pre style="font-size: 22px;"> Multiple peer connections Test</pre>
+    <video id="video1" playsinline autoplay></video>
+    <video id="video2" playsinline autoplay></video>
+    <video id="video3" playsinline autoplay></video>
+    <pre style="font-size: 22px;" id="message" />
+</div>
+
+<script>
+    const localVideo = document.querySelector('video#video1');
+    const video2 = document.querySelector('video#video2');
+    const video3 = document.querySelector('video#video3');
+
+    let localStream;
+    let pc1Local;
+    let pc1Remote;
+    let pc2Local;
+    let pc2Remote;
+
+    const offerOptions = {
+        offerToReceiveAudio: 1,
+        offerToReceiveVideo: 1
+    };
+
+    let error='';
+    let result1 = false;
+    let result2 = false;
+
+    function gotStream(stream) {
+        window.stream = stream; // make stream available to console
+        localVideo.srcObject = stream;
+        message.innerText+="Got stream from getUserMedia\n";
+    }
+
+    function handleError(e) {
+        message.innerText+=e.message;
+        error=e.message;
+    }
+
+    async function start(constraints) {
+        if (localStream) {
+            localStream.getTracks().forEach(track => {
+            track.stop();
+            });
+        }
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            gotStream(localStream);
+        } catch (e) {
+            handleError(e);
+        }
+    }
+
+    function call() {
+        console.log('Starting calls');
+        message.innerText+="Start calls\n";
+        const audioTracks = window.stream.getAudioTracks();
+        const videoTracks = window.stream.getVideoTracks();
+        if (audioTracks.length > 0) {
+            console.log(`Using audio device: ${audioTracks[0].label}`);
+            message.innerText+=`Using audio device: ${audioTracks[0].label}\n`;
+        }
+        if (videoTracks.length > 0) {
+            console.log(`Using video device: ${videoTracks[0].label}`);
+            message.innerText+=`Using video device: ${videoTracks[0].label}\n`;
+        }
+        // Create an RTCPeerConnection via the polyfill.
+        const servers = null;
+        pc1Local = new RTCPeerConnection(servers);
+        pc1Remote = new RTCPeerConnection(servers);
+        pc1Remote.ontrack = gotRemoteStream1;
+        pc1Local.onicecandidate = iceCallback1Local;
+        pc1Remote.onicecandidate = iceCallback1Remote;
+        console.log('pc1: created local and remote peer connection objects');
+
+        pc2Local = new RTCPeerConnection(servers);
+        pc2Remote = new RTCPeerConnection(servers);
+        pc2Remote.ontrack = gotRemoteStream2;
+        pc2Local.onicecandidate = iceCallback2Local;
+        pc2Remote.onicecandidate = iceCallback2Remote;
+        console.log('pc2: created local and remote peer connection objects');
+
+        window.stream.getTracks().forEach(track => pc1Local.addTrack(track, window.stream));
+        console.log('Adding local stream to pc1Local');
+        message.innerText+='Adding local stream to pc1Local\n';
+
+        window.stream.getTracks().forEach(track => pc2Local.addTrack(track, window.stream));
+        console.log('Adding local stream to pc2Local');
+        message.innerText+='Adding local stream to pc2Local\n';
+
+        const {codecs} = RTCRtpSender.getCapabilities('video');
+        const codecIndex = codecs.findIndex(c => c.mimeType === "video/H264" && c.sdpFmtpLine.includes("packetization-mode=0"));
+        if(codecIndex<0) {
+            const codecIndex = codecs.findIndex(c => c.mimeType === "video/H264");
+            if(codecIndex<0) {
+                alert("h264 not supported. codec set to default");
+            }
+        }
+        if(codecIndex>=0) {
+            const selectedCodec = codecs[codecIndex];
+            codecs.splice(codecIndex, 1);
+            codecs.unshift(selectedCodec);
+            const transceiver1 = pc1Local.getTransceivers().find(t => t.sender && t.sender.track === localStream.getVideoTracks()[0]);
+            transceiver1.setCodecPreferences(codecs);
+            const transceiver2 = pc2Local.getTransceivers().find(t => t.sender && t.sender.track === localStream.getVideoTracks()[0]);
+            transceiver2.setCodecPreferences(codecs);
+
+            console.log('setting codec to h264',transceiver1)
+        }
+        
+        pc1Local.createOffer(offerOptions)
+        .then(gotDescription1Local, handleError);
+
+        pc2Local.createOffer(offerOptions)
+            .then(gotDescription2Local, handleError);
+    }
+
+    function gotDescription1Local(desc) {
+        pc1Local.setLocalDescription(desc);
+        console.log(`Offer from pc1Local\n${desc.sdp}`);
+        message.innerText+='Offer from pc1Local\n';
+        pc1Remote.setRemoteDescription(desc);
+        // Since the 'remote' side has no media stream we need
+        // to pass in the right constraints in order for it to
+        // accept the incoming offer of audio and video.
+        pc1Remote.createAnswer().then(gotDescription1Remote, handleError);
+    }
+
+    function gotDescription1Remote(desc) {
+        pc1Remote.setLocalDescription(desc);
+        console.log(`Answer from pc1Remote\n${desc.sdp}`);
+        message.innerText+='Answer from pc1Remote\n';
+        pc1Local.setRemoteDescription(desc);
+    }
+
+    function gotDescription2Local(desc) {
+        pc2Local.setLocalDescription(desc);
+        console.log(`Offer from pc2Local\n${desc.sdp}`);
+        message.innerText+='Offer from pc2Local\n';
+        pc2Remote.setRemoteDescription(desc);
+        // Since the 'remote' side has no media stream we need
+        // to pass in the right constraints in order for it to
+        // accept the incoming offer of audio and video.
+        pc2Remote.createAnswer().then(gotDescription2Remote, handleError);
+    }
+
+    function gotDescription2Remote(desc) {
+        pc2Remote.setLocalDescription(desc);
+        console.log(`Answer from pc2Remote\n${desc.sdp}`);
+        message.innerText+='Answer from pc2Remote\n';
+        pc2Local.setRemoteDescription(desc);
+    }
+
+    function gotRemoteStream1(e) {
+        if (video2.srcObject !== e.streams[0]) {
+            video2.srcObject = e.streams[0];
+            console.log('pc1: received remote stream');
+            message.innerText+="Recieved remote stream1\n";
+            result1 = true;
+        }
+    }
+
+    function gotRemoteStream2(e) {
+        if (video3.srcObject !== e.streams[0]) {
+            video3.srcObject = e.streams[0];
+            console.log('pc2: received remote stream');
+            message.innerText+="Recieved remote stream2\n";
+            result2 = true;
+        }
+    }
+
+    function iceCallback1Local(event) {
+        handleCandidate(event.candidate, pc1Remote, 'pc1: ', 'local');
+    }
+
+    function iceCallback1Remote(event) {
+        handleCandidate(event.candidate, pc1Local, 'pc1: ', 'remote');
+    }
+
+    function iceCallback2Local(event) {
+        handleCandidate(event.candidate, pc2Remote, 'pc2: ', 'local');
+    }
+
+    function iceCallback2Remote(event) {
+        handleCandidate(event.candidate, pc2Local, 'pc2: ', 'remote');
+    }
+
+    function handleCandidate(candidate, dest, prefix, type) {
+        dest.addIceCandidate(candidate)
+            .then(onAddIceCandidateSuccess, handleError);
+        console.log(`${prefix}New ${type} ICE candidate: ${candidate ? candidate.candidate : '(null)'}`);
+    }
+
+    function onAddIceCandidateSuccess() {
+        console.log('AddIceCandidate success.');
+    }
+
+    function getResult() {
+        return result1 && result2;
+    }
+
+    function getError() {
+        return error;
+    }
+
+    function hangup() {
+        pc1Local.close();
+        pc2Local.close();
+        pc1Remote.close();
+        pc2Remote.close();
+        pc1Local = null;
+        pc2Local = null;
+        pc1Remote = null;
+        pc2Remote = null;
+        result = false;
+    }
+
+    start({video: true, audio: true})
+</script>
+</body>
+</html>
