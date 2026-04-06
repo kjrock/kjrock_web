@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>getUserMedia Resolution Test</title>
+</head>
+
+<body style="background-color: white;">
+<div id="container">
+    <pre style="font-size: 22px;"> getUserMedia Resolution Test</pre>
+    <video id="video" playsinline autoplay></video>
+    <pre style="font-size: 22px;" id="message" />
+</div>
+
+<script>
+    const videoElement = document.querySelector('video');
+
+    let stream;
+    let result = false;
+    let error = '';
+
+    function gotStream(stream) {
+        window.stream = stream; // make stream available to console
+        videoElement.srcObject = stream;
+        result = true;
+    }
+
+    function handleError(e) {
+        message.innerText=e.message;
+        error=e.message;
+        result = false;
+    }
+
+    async function start(constraints) {
+        if (stream) {
+            stream.getTracks().forEach(track => {
+            track.stop();
+            });
+        }
+        try {
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
+            message.innerText="getUserMedia with constraints: " + JSON.stringify(constraints);
+            gotStream(stream);
+        } catch (e) {
+            handleError(e);
+        }
+    }
+
+    function getResult() {
+        return result;
+    }
+
+    function getError() {
+        return error;
+    }
+</script>
+</body>
+</html>
